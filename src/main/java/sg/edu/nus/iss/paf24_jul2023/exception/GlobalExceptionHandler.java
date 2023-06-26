@@ -2,6 +2,9 @@ package sg.edu.nus.iss.paf24_jul2023.exception;
 
 import java.util.Date;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
@@ -71,6 +74,20 @@ public class GlobalExceptionHandler {
         ModelAndView mav = new ModelAndView("error.html");
         mav.addObject("errorMessage", errMsg);
         return mav;
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorMessage> handleAmountNotSufficientException(IllegalArgumentException ex,
+            HttpServletRequest request) {
+        // forming the custom error message
+        ErrorMessage errMsg = new ErrorMessage();
+        errMsg.setStatusCode(400);
+        errMsg.setTimeStamp(new Date());
+        errMsg.setMessage(ex.getMessage());
+        errMsg.setDescription(request.getRequestURI());
+
+        // return the error 
+        return new ResponseEntity<ErrorMessage>(errMsg, HttpStatus.BAD_REQUEST);
     }
 }
 

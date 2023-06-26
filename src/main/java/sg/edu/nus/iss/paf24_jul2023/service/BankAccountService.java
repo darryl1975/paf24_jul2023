@@ -68,14 +68,29 @@ public class BankAccountService {
         }
 
         if (bTranfererExists && bReceiverExists && bTransfererAllowed && bReceiverAllowed && bEnoughMoney) {
+            // exception here before carrying out 1.
+            if (true) {
+                throw new IllegalArgumentException("Simulating error before calling 1...");
+            }
+
             // carry out the transfer operations
             // (both of these mus be successful in one unit of work)
             // anywhere in this function (which is transactional) fails, it will rollback
             // 1. withdraw the amount from the transferer
             bankAccountRepo.withdrawAmount(withdrawAccountId, transferAmount);
 
+            // exception after completing 1.
+            // if (true) {
+            //     throw new IllegalArgumentException("Simulating error after calling 1...");
+            // }
+
             // 2. deposit the amount into the receiver
             bankAccountRepo.depositAmount(depositAccountId, transferAmount);
+
+            // exception after completing 1. & 2.
+            // throw new IllegalArgumentException("Simulating error after calling 1 and
+            // 2...");
+
         } else {
             if (!bTransfererAllowed) {
                 throw new AccountBlockedAndDisabledException("Transferer is either blocked or inactive.");
