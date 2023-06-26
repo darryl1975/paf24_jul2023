@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import sg.edu.nus.iss.paf24_jul2023.exception.AccountBlockedAndDisabledException;
 import sg.edu.nus.iss.paf24_jul2023.exception.AmountNotSufficientException;
-import sg.edu.nus.iss.paf24_jul2023.exception.BankAccountNotFoundException;
 import sg.edu.nus.iss.paf24_jul2023.model.BankAccount;
 import sg.edu.nus.iss.paf24_jul2023.repository.BankAccountRepo;
 

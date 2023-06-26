@@ -1,7 +1,5 @@
 package sg.edu.nus.iss.paf24_jul2023.controller;
 
-import javax.swing.RepaintManager;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,5 +41,11 @@ public class BankAccountController {
         return new ResponseEntity<BankAccount>(bankAccount, HttpStatus.OK);
     }
 
+    @PostMapping("/transfer/{transferer-id}/receive/{receiver-id}/amount/{amount}")
+    public ResponseEntity<Boolean> paynow(@PathVariable("transferer-id") Integer transferAccountId, @PathVariable("receiver-id") Integer receiveAccountId, @PathVariable("amount") Float transferAmount) {
+        Boolean bTransferSuccess = bankAccountService.transferMoney(transferAccountId, receiveAccountId, transferAmount);
+
+        return new ResponseEntity<Boolean>(bTransferSuccess, HttpStatus.OK);
+    }
 
 }
