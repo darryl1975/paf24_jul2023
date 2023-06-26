@@ -1,6 +1,9 @@
 package sg.edu.nus.iss.paf24_jul2023.repository;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -23,12 +26,20 @@ public class BankAccountRepo {
     // (?, ?, ?, ?, ?, ?)";
 
     public BankAccount getAccountById(Integer bankAccountId) {
-        BankAccount bankAccount = jdbcTemplate.queryForObject(GET_ACCOUNT_SQL,
-                BeanPropertyRowMapper.newInstance(BankAccount.class), bankAccountId);
+        // BankAccount bankAccount = jdbcTemplate.queryForObject(GET_ACCOUNT_SQL,
+        //         BeanPropertyRowMapper.newInstance(BankAccount.class), bankAccountId);
 
-        if (bankAccount == null) {
-            throw new BankAccountNotFoundException("Account not created");
+        // if (bankAccount == null) {
+        //     throw new BankAccountNotFoundException("Account not created");
+        // }
+
+        List<BankAccount> bankAccounts = jdbcTemplate.query(GET_ACCOUNT_SQL, BeanPropertyRowMapper.newInstance(BankAccount.class), bankAccountId);
+
+        if (bankAccounts.isEmpty()) {
+             throw new BankAccountNotFoundException("Account doesn't not exist.");
         }
+
+        BankAccount bankAccount = bankAccounts.get(0);
 
         return bankAccount;
     }
