@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import sg.edu.nus.iss.paf24_jul2023.exception.AccountBlockedAndDisabledException;
+import sg.edu.nus.iss.paf24_jul2023.exception.AmountNotSufficientException;
 import sg.edu.nus.iss.paf24_jul2023.exception.BankAccountNotFoundException;
 import sg.edu.nus.iss.paf24_jul2023.model.BankAccount;
 import sg.edu.nus.iss.paf24_jul2023.repository.BankAccountRepo;
@@ -66,8 +68,30 @@ public class BankAccountService {
             bEnoughMoney = true;
         }
 
+        if (bTranfererExists && bReceiverExists && bTransfererAllowed && bReceiverAllowed && bEnoughMoney) {
+            // carry out the transfer operations
+            // (both of these mus be successful in one unit of work)
+            // anywhere in this function (which is transactional) fails, it will rollback
+            // 1. withdraw the amount from the transferer
+            bankAccountRepo.withdrawAmount(withdrawAccountId, transferAmount);
 
-        return false;
+            // 2. deposit the amount into the receiver
+            bankAccountRepo.depositAmount(depositAccountId, transferAmount);
+        } else {
+            if (!bTransfererAllowed) {
+                throw new AccountBlockedAndDisabledException("Transferer is either blocked or inactive.");
+            }
+
+            if (!bReceiverAllowed) {
+                throw new AccountBlockedAndDisabledException("Receiver is either blocked or inactive.");
+            }
+
+            if (!bEnoughMoney) {
+                throw new AmountNotSufficientException("Transfer doesn't have enough balance to transfer to receiver.");
+            }
+        }
+
+        return true;
     }
 
 }

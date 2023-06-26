@@ -3,11 +3,10 @@ package sg.edu.nus.iss.paf24_jul2023.repository;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
+
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import sg.edu.nus.iss.paf24_jul2023.exception.BankAccountNotFoundException;
 import sg.edu.nus.iss.paf24_jul2023.model.BankAccount;
