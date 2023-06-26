@@ -64,10 +64,4 @@ public class BankAccountRepo {
         return iResult > 0 ? true : false;
     }
 
-    // transactional: encompass in a single unit of work
-    @Transactional
-    public Boolean transferMoney(Integer withdrawAccountId, Integer depositAccountId, Float transferAmount) {
-        return false;
-    }
-
 }
