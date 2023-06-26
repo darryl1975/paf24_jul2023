@@ -34,7 +34,7 @@ public class BankAccountController {
         }
     }
 
-    @GetMapping("/{account-id}")
+    @GetMapping(path = "/{account-id}",  produces = "application/json")
     public ResponseEntity<BankAccount> getAccountbyId(@PathVariable("account-id") Integer id) {
         BankAccount bankAccount = bankAccountService.retrieveAccountById(id);
 

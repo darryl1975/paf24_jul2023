@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.HttpServerErrorException.InternalServerError;
 import org.springframework.web.servlet.ModelAndView;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,6 +32,7 @@ public class GlobalExceptionHandler {
     // }
 
     @ExceptionHandler(BankAccountNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public ModelAndView handleBankAccountNotFoundException(BankAccountNotFoundException ex,
             HttpServletRequest request) {
         // forming the custom error message
@@ -89,5 +93,20 @@ public class GlobalExceptionHandler {
         // return the error 
         return new ResponseEntity<ErrorMessage>(errMsg, HttpStatus.BAD_REQUEST);
     }
-}
 
+
+    @ExceptionHandler(HttpServerErrorException.class)
+    public ResponseEntity<ErrorMessage> handleHttpServerErrorException(HttpServerErrorException ex,
+            HttpServletRequest request) {
+        // forming the custom error message
+        ErrorMessage errMsg = new ErrorMessage();
+        errMsg.setStatusCode(ex.getStatusCode().value());
+        errMsg.setTimeStamp(new Date());
+        errMsg.setMessage(ex.getMessage());
+        errMsg.setDescription(request.getRequestURI());
+
+        // return the error 
+        return new ResponseEntity<ErrorMessage>(errMsg, HttpStatus.BAD_REQUEST);
+    }
+
+}
