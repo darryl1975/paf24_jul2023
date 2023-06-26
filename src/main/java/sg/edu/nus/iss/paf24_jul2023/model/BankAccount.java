@@ -16,7 +16,7 @@ public class BankAccount {
 
     private Boolean isActive;
 
-    private String account_type;
+    private String accountType;
 
     private float balance;
 

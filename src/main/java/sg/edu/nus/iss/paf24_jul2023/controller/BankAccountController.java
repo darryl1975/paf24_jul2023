@@ -4,15 +4,14 @@ import javax.swing.RepaintManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import sg.edu.nus.iss.paf24_jul2023.model.BankAccount;
 import sg.edu.nus.iss.paf24_jul2023.service.BankAccountService;
 
@@ -26,6 +25,7 @@ public class BankAccountController {
     @PostMapping
     public ResponseEntity<Boolean> createAccount(@RequestBody BankAccount bankAccount) {
         
+        System.out.println("BankAccountController > createAccount > " + bankAccount.toString());
         Boolean bAccountCreated = bankAccountService.createAccount(bankAccount);
 
         if (bAccountCreated) {

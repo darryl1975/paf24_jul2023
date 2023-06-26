@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import sg.edu.nus.iss.paf24_jul2023.exception.BankAccountNotFoundException;
 import sg.edu.nus.iss.paf24_jul2023.model.BankAccount;
 
 @Repository
@@ -24,6 +26,10 @@ public class BankAccountRepo {
         BankAccount bankAccount = jdbcTemplate.queryForObject(GET_ACCOUNT_SQL,
                 BeanPropertyRowMapper.newInstance(BankAccount.class), bankAccountId);
 
+        if (bankAccount == null) {
+            throw new BankAccountNotFoundException("Account not created");
+        }
+
         return bankAccount;
     }
 
@@ -42,9 +48,15 @@ public class BankAccountRepo {
 
     public Boolean createAccount(BankAccount bankAccount) {
         //"insert into bank_account (full_name, is_blocked, is_active, account_type, balance) values (?, ?, ?, ?, ?)";
-        Integer iResult = jdbcTemplate.update(CREATE_ACCOUNT_SQL, bankAccount.getFullName(), bankAccount.getIsBlocked(), bankAccount.getIsActive(), bankAccount.getAccount_type(), bankAccount.getBalance());
+        Integer iResult = jdbcTemplate.update(CREATE_ACCOUNT_SQL, bankAccount.getFullName(), bankAccount.getIsBlocked(), bankAccount.getIsActive(), bankAccount.getAccountType(), bankAccount.getBalance());
 
         return iResult > 0 ? true : false;
+    }
+
+    // transactional: encompass in a single unit of work
+    @Transactional
+    public Boolean transferMoney(Integer withdrawAccountId, Integer depositAccountId, Float transferAmount) {
+        return false;
     }
 
 }
