@@ -17,19 +17,34 @@ public class BankAccountRepo {
     private final String WITHDRAW_SQL = "update bank_account set balance = balance - ? where id = ?";
     private final String DEPOSIT_SQL = "update bank_account set balance = balance + ? where id = ?";
     private final String CREATE_ACCOUNT_SQL = "insert into bank_account (full_name, is_blocked, is_active, account_type, balance) values (?, ?, ?, ?, ?)";
-    // private final String CREATE_ACCOUNT2_SQL = "insert into bank_account values (?, ?, ?, ?, ?, ?)";
+    // private final String CREATE_ACCOUNT2_SQL = "insert into bank_account values
+    // (?, ?, ?, ?, ?, ?)";
 
     public BankAccount getAccountById(Integer bankAccountId) {
-        BankAccount bankAccount = jdbcTemplate.queryForObject(GET_ACCOUNT_SQL, BeanPropertyRowMapper.newInstance(BankAccount.class), bankAccountId);
+        BankAccount bankAccount = jdbcTemplate.queryForObject(GET_ACCOUNT_SQL,
+                BeanPropertyRowMapper.newInstance(BankAccount.class), bankAccountId);
 
         return bankAccount;
     }
 
     public Boolean withdrawAmount(Integer withdrawAccountId, Float withdrawAmount) {
-  
         // "update bank_account set balance = balance - ? where id = ?"
         Integer iResult = jdbcTemplate.update(WITHDRAW_SQL, withdrawAmount, withdrawAccountId);
 
         return iResult > 0 ? true : false;
     }
+
+    public Boolean depositAmount(Integer depositAccountId, Float depositAmount) {
+        Integer iResult = jdbcTemplate.update(DEPOSIT_SQL, depositAmount, depositAccountId);
+
+        return iResult > 0 ? true : false;
+    }
+
+    public Boolean createAccount(BankAccount bankAccount) {
+        //"insert into bank_account (full_name, is_blocked, is_active, account_type, balance) values (?, ?, ?, ?, ?)";
+        Integer iResult = jdbcTemplate.update(CREATE_ACCOUNT_SQL, bankAccount.getFullName(), bankAccount.getIsBlocked(), bankAccount.getIsActive(), bankAccount.getAccount_type(), bankAccount.getBalance());
+
+        return iResult > 0 ? true : false;
+    }
+
 }
